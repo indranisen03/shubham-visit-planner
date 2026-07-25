@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   await sql`
     INSERT INTO onboarding (id, days_exhausted, floating_picks, anchor_plans, updated_at)
-    VALUES (1, ${daysExhausted}, ${JSON.stringify(floatingPicks)}, ${JSON.stringify(anchorPlans)}, now())
+    VALUES (1, ${daysExhausted}, ${sql.json(floatingPicks)}, ${sql.json(anchorPlans)}, now())
     ON CONFLICT (id) DO UPDATE SET
       days_exhausted = EXCLUDED.days_exhausted,
       floating_picks = EXCLUDED.floating_picks,
