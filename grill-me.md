@@ -45,3 +45,13 @@ Key facts surfaced:
 `create-next-app` (TypeScript, Tailwind, App Router, `src/` dir) scaffolded into `web/`. Hit and resolved a Node version + Tailwind native-binary issue (full detail in the global issues log, not repeated here). Confirmed working end-to-end: `next build` succeeds, `next dev` serves the default page cleanly in-browser with no console errors, via a `.claude/launch.json` preview config.
 
 **Architecture is now shared-understanding-complete** for the foundational layer (Next.js + Vercel Postgres + Vercel hosting, local dev running). From here, remaining decisions are feature-level (onboarding form design, flight API vendor, DB schema) and can be worked through as we build each piece, not as blocking pre-build discussion.
+
+## 2026-07-25 — Onboarding form v1 (localStorage, no DB yet)
+
+Built `/onboarding` (`web/src/app/onboarding/page.tsx`) with three parts: the 60-day counter input with a live green→amber→red gradient bar (`web/src/lib/counter.ts`), a real "Fixed vs. Floating" employer holiday model (`web/src/lib/holidays.ts`, replacing the earlier generic Labor Day/Thanksgiving/Christmas placeholders), and a Durga Puja/Diwali section since those aren't on the employer calendar at all.
+
+**Real holiday data received from Indrani**, reconstructed from a paste that lost its original two-column table structure — grouped by HR convention rather than paste line position (see the file's header comment for the full reasoning). Flagged as worth a one-time sanity check with Shubham, not blocking.
+
+**Persistence:** localStorage only for now, not real Vercel Postgres yet — that needs Indrani to connect the GitHub repo to a Vercel project and provision Postgres first (an account-level action, not something doable from here). Tracked as the next infrastructure step once this form's shape feels right.
+
+**Verified in-browser:** counter bar transitions correctly through all three color zones, floating-day picker enforces the 4-pick cap, form data round-trips through localStorage. Caught and fixed a JSX whitespace bug in the process (full detail in the global issues log) — a reminder that even non-interactive text needs an actual browser check, not just a successful build.
