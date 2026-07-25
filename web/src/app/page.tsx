@@ -1,65 +1,123 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+import { useEffect, useState } from "react";
+import { counterVisual } from "@/lib/counter";
+import { generateSkeleton, ProposedVisit } from "@/lib/visits";
+import Link from "next/link";
+
+type OnboardingData = {
+  daysExhausted: number;
+  floatingPicks: string[];
+  anchorPlans: Record<string, { option: string; note: string }>;
+};
+
+function formatDate(iso: string) {
+  return new Date(`${iso}T00:00:00`).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export default function HomePage() {
+  const [data, setData] = useState<OnboardingData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/onboarding")
+      .then((res) => res.json())
+      .then((d: OnboardingData) => {
+        setData(d);
+      })
+      .catch(() => setError("Couldn't load data"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <main className="min-h-screen bg-background px-4 py-10">Loading...</main>;
+  if (error || !data)
+    return (
+      <main className="min-h-screen bg-background px-4 py-10">
+        <p className="text-red-600">{error}</p>
       </main>
-    </div>
+    );
+
+  const visual = counterVisual(data.daysExhausted);
+  const skeleton = generateSkeleton(data.daysExhausted, data.floatingPicks);
+
+  return (
+    <main className="min-h-screen bg-background px-4 py-10 sm:px-8">
+      <div className="mx-auto max-w-4xl space-y-10">
+        {/* Header */}
+        <header className="text-center space-y-1">
+          <p className="text-sm tracking-wide text-blush-dark">austin ⇄ auburn hills</p>
+          <h1 className="text-4xl font-semibold text-foreground">Visit Planner</h1>
+          <p className="text-sm text-foreground/70">6-month skeleton for the next trip(s)</p>
+        </header>
+
+        {/* 60-day counter */}
+        <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-blush/60">
+          <h2 className="text-lg font-medium">H-1B 60-day window</h2>
+          <div className="mt-4 flex items-center gap-4">
+            <div className="text-3xl font-semibold" style={{ color: visual.color }}>
+              {visual.remaining}
+            </div>
+            <div className="text-sm text-foreground/70">days remaining</div>
+          </div>
+          <div className="mt-4">
+            <div className="h-6 w-full overflow-hidden rounded-full bg-white ring-1 ring-blush/60">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ width: `${visual.pct * 100}%`, backgroundColor: visual.color }}
+              />
+            </div>
+          </div>
+          {visual.zone === "red" && (
+            <p className="mt-2 text-sm font-medium text-red-600">⚠️ Warning zone — very limited time left</p>
+          )}
+        </section>
+
+        {/* 6-month skeleton */}
+        <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-sage/60">
+          <h2 className="text-lg font-medium">Proposed 6-month skeleton</h2>
+          <p className="mt-1 text-sm text-foreground/70">
+            Rough visit windows (blue shades). Confirm dates + search flights in the{" "}
+            <Link href="/onboarding" className="font-medium text-blush-dark hover:underline">
+              onboarding form
+            </Link>
+            .
+          </p>
+
+          <div className="mt-6 space-y-3">
+            {skeleton.length === 0 ? (
+              <p className="text-sm text-foreground/70">No visits possible with 0 days remaining.</p>
+            ) : (
+              skeleton.map((visit) => (
+                <div key={visit.id} className="rounded-lg bg-blush/40 p-4">
+                  <div className="flex items-baseline justify-between">
+                    <h3 className="font-medium">
+                      {formatDate(visit.startDate)} – {formatDate(visit.endDate)}
+                    </h3>
+                    <span className="text-xs font-medium text-foreground/70">~{visit.workingDays}d</span>
+                  </div>
+                  <p className="mt-1 text-sm text-foreground/70">{visit.note}</p>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <div className="rounded-2xl bg-blush/50 p-6 text-center">
+          <p className="font-medium">Ready to plan the next trip?</p>
+          <Link
+            href="/onboarding"
+            className="mt-3 inline-block rounded-full bg-blush-dark px-6 py-2 text-white hover:opacity-90"
+          >
+            Onboarding form
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }

@@ -17,6 +17,7 @@ export async function ensureSchema() {
       days_exhausted INTEGER NOT NULL DEFAULT 0,
       floating_picks JSONB NOT NULL DEFAULT '[]',
       anchor_plans JSONB NOT NULL DEFAULT '{}',
+      proposed_visits JSONB NOT NULL DEFAULT '[]',
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       CONSTRAINT single_row CHECK (id = 1)
     )
