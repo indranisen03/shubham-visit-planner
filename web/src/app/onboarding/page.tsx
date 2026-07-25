@@ -9,8 +9,6 @@ import {
 } from "@/lib/holidays";
 import { counterVisual } from "@/lib/counter";
 
-const STORAGE_KEY = "visit-planner-onboarding";
-
 const ANCHOR_OPTIONS = [
   "Not sure yet",
   "Floating day",
@@ -43,18 +41,23 @@ export default function OnboardingPage() {
   const [floatingPicks, setFloatingPicks] = useState<string[]>([]);
   const [anchorPlans, setAnchorPlans] = useState<Record<string, AnchorPlan>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    try {
-      const saved: OnboardingData = JSON.parse(raw);
-      setDaysExhausted(saved.daysExhausted ?? 0);
-      setFloatingPicks(saved.floatingPicks ?? []);
-      setAnchorPlans(saved.anchorPlans ?? {});
-    } catch {
-      // ignore malformed local storage, start fresh
-    }
+    fetch("/api/onboarding")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to load (${res.status})`);
+        return res.json();
+      })
+      .then((saved: OnboardingData) => {
+        setDaysExhausted(saved.daysExhausted ?? 0);
+        setFloatingPicks(saved.floatingPicks ?? []);
+        setAnchorPlans(saved.anchorPlans ?? {});
+      })
+      .catch(() => setError("Couldn't load saved data — starting fresh."))
+      .finally(() => setLoading(false));
   }, []);
 
   const visual = counterVisual(daysExhausted);
@@ -78,11 +81,24 @@ export default function OnboardingPage() {
     }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const data: OnboardingData = { daysExhausted, floatingPicks, anchorPlans };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    setSubmitted(true);
+    setSaving(true);
+    setError(null);
+    try {
+      const data: OnboardingData = { daysExhausted, floatingPicks, anchorPlans };
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(`Failed to save (${res.status})`);
+      setSubmitted(true);
+    } catch {
+      setError("Couldn't save — check your connection and try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -232,17 +248,20 @@ export default function OnboardingPage() {
             </div>
           </section>
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
           <button
             type="submit"
-            className="w-full rounded-full bg-blush-dark px-6 py-3 text-white shadow-sm transition hover:opacity-90"
+            disabled={loading || saving}
+            className="w-full rounded-full bg-blush-dark px-6 py-3 text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
           >
-            Save onboarding info
+            {saving ? "Saving…" : loading ? "Loading…" : "Save onboarding info"}
           </button>
         </form>
 
         {submitted && (
           <div className="rounded-2xl bg-sage/50 p-6 text-sm">
-            <p className="font-medium">Saved locally in this browser.</p>
+            <p className="font-medium">Saved to the shared database.</p>
             <p className="mt-1 text-foreground/70">
               {visual.remaining} days remaining · {floatingPicks.length}/
               {FLOATING_HOLIDAY_PICK_LIMIT} floating days picked ·{" "}
