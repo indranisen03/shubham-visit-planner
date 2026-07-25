@@ -46,6 +46,14 @@ Key facts surfaced:
 
 **Architecture is now shared-understanding-complete** for the foundational layer (Next.js + Vercel Postgres + Vercel hosting, local dev running). From here, remaining decisions are feature-level (onboarding form design, flight API vendor, DB schema) and can be worked through as we build each piece, not as blocking pre-build discussion.
 
+## 2026-07-25 — Flight API + final push
+
+**Flight search setup:** RapidAPI + Flights Scraper Sky API. Indrani added `RAPIDAPI_KEY` to Vercel Environment Variables. Ready for wiring.
+
+**Dashboard live:** Home page now shows counter + 6-month skeleton (proposed visits around Labor Day, Durga Puja, Diwali/Thanksgiving, Christmas). All auto-generated from the counter + holiday data already in Postgres.
+
+**Remaining for v1:** flight search logic, Google Calendar integration (blocked on Indrani reconnecting the calendar connector).
+
 ## 2026-07-25 — Onboarding form v1 (localStorage, no DB yet)
 
 Built `/onboarding` (`web/src/app/onboarding/page.tsx`) with three parts: the 60-day counter input with a live green→amber→red gradient bar (`web/src/lib/counter.ts`), a real "Fixed vs. Floating" employer holiday model (`web/src/lib/holidays.ts`, replacing the earlier generic Labor Day/Thanksgiving/Christmas placeholders), and a Durga Puja/Diwali section since those aren't on the employer calendar at all.
