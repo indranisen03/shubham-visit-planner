@@ -71,10 +71,19 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
         <div className="mt-3 space-y-2 rounded-lg bg-black/30 p-3 border border-black/20">
           <p className="text-xs font-semibold text-foreground">✈ {flights.length} options found</p>
           {flights.slice(0, 3).map((flight, i) => (
-            <div key={i} className="text-xs text-foreground flex justify-between items-center">
+            <div key={i} className="text-xs text-foreground flex justify-between items-center gap-2">
               <span>{flight.airline}</span>
               <span className="font-semibold text-blush">${flight.price}</span>
               {flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
+              <button
+                onClick={() => {
+                  const url = `https://www.kayak.com/flights/AUS-DTW/${visit.startDate.replace(/-/g, "")}`;
+                  window.open(url, "_blank");
+                }}
+                className="ml-auto rounded bg-blush/80 px-2 py-1 text-xs font-medium text-black hover:bg-blush transition"
+              >
+                Book
+              </button>
             </div>
           ))}
         </div>
@@ -116,7 +125,7 @@ export default function HomePage() {
         <header className="text-center space-y-1">
           <p className="text-sm tracking-wide text-blush-dark">austin ⇄ auburn hills</p>
           <h1 className="text-4xl font-semibold text-foreground">Visit Planner</h1>
-          <p className="text-sm text-foreground/70">6-month skeleton for the next trip(s)</p>
+          <p className="text-sm text-foreground/70">Plan your next 2 trips and track your H-1B window</p>
         </header>
 
         {/* 60-day counter */}
@@ -141,13 +150,13 @@ export default function HomePage() {
           )}
         </section>
 
-        {/* 6-month skeleton */}
+        {/* Upcoming trips */}
         <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-blush/60">
-          <h2 className="text-lg font-medium">Proposed 6-month skeleton</h2>
+          <h2 className="text-lg font-medium">Your next 2 trips</h2>
           <p className="mt-1 text-sm text-foreground/70">
-            Rough visit windows (blue shades). Confirm dates + search flights in the{" "}
+            Suggested dates to maximize time together and minimize H-1B counter. Adjust in{" "}
             <Link href="/onboarding" className="font-medium text-amber-400 hover:text-amber-300 transition">
-              onboarding form
+              settings
             </Link>
             .
           </p>

@@ -155,12 +155,22 @@ export default function OnboardingPage() {
               Automatic — no choice needed, just here for planning context.
             </p>
             <ul className="mt-4 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-              {FIXED_HOLIDAYS_2026.map((h) => (
-                <li key={h.id} className="rounded-lg bg-blush/40 px-3 py-2">
-                  <div className="font-medium">{formatDate(h.date)}</div>
-                  <div className="text-foreground/70">{h.label}</div>
-                </li>
-              ))}
+              {FIXED_HOLIDAYS_2026.map((h) => {
+                const isPast = new Date(h.date) < new Date();
+                return (
+                  <li
+                    key={h.id}
+                    className={`rounded-lg px-3 py-2 ${
+                      isPast
+                        ? "bg-foreground/10 opacity-50"
+                        : "bg-blush/40"
+                    }`}
+                  >
+                    <div className="font-medium">{formatDate(h.date)}</div>
+                    <div className="text-foreground/70">{h.label}</div>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 
