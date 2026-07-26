@@ -13,18 +13,6 @@ function getMockFlights(departureDate: string) {
         stops: 0,
         duration: "4h 30m",
       },
-      {
-        price: Math.round(basePrice - 20 + priceVariance),
-        airline: "Southwest",
-        stops: 0,
-        duration: "4h 45m",
-      },
-      {
-        price: Math.round(basePrice + 60 + priceVariance),
-        airline: "United",
-        stops: 1,
-        duration: "6h 15m",
-      },
     ],
   };
 }
