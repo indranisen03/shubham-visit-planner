@@ -19,31 +19,31 @@ export function generateSkeleton(
   const daysRemaining = Math.max(0, 60 - daysExhausted);
 
   // Propose next 2 upcoming trips, max 10 working days each.
-  // Focus on clustering around major holidays to maximize value.
+  // Aligned with actual planned visits.
 
   const visits: ProposedVisit[] = [];
 
-  // Visit 1: Coming weekend + 10 working days (late July/early Aug)
+  // Visit 1: Late July through mid-August (Shubham in Auburn Hills)
   if (daysRemaining >= 10) {
     visits.push({
       id: "visit-1-upcoming",
-      startDate: "2026-07-27", // This coming weekend
-      endDate: "2026-08-07", // ~10 working days later
-      workingDays: 10,
+      startDate: "2026-07-31", // Thu/Fri this week
+      endDate: "2026-08-17", // Through mid-August
+      workingDays: 12,
       aroundHolidays: [],
-      note: "Coming trip (10 working days)",
+      note: "Extended stay (12 working days)",
     });
   }
 
-  // Visit 2: Around Labor Day (early Sep)
+  // Visit 2: Early September around Labor Day
   if (daysRemaining >= 20) {
     visits.push({
       id: "visit-2-labor-day",
-      startDate: "2026-09-04", // Labor Day weekend cluster
-      endDate: "2026-09-14",
+      startDate: "2026-09-03", // Depart Austin Sep 3
+      endDate: "2026-09-15", // Return Sep 14-15
       workingDays: 10,
       aroundHolidays: ["labor-day"],
-      note: "Labor Day long weekend cluster",
+      note: "Labor Day cluster (Sep 3-15)",
     });
   }
 
