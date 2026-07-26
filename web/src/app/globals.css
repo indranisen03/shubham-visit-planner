@@ -2,12 +2,12 @@
 
 :root {
   --background: #0f1419;
-  --foreground: #e8eef7;
-  --blush: #4a90e2;
-  --blush-dark: #2563eb;
-  --sage: #5b7c99;
-  --sage-dark: #3d5a7c;
-  --cream: #1e2535;
+  --foreground: #f1f5f9;
+  --blush: #f59e0b;
+  --blush-dark: #d97706;
+  --sage: #14b8a6;
+  --sage-dark: #0d9488;
+  --cream: #1a202c;
 }
 
 @theme inline {

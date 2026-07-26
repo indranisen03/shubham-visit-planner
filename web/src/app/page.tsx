@@ -68,13 +68,13 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
       {flightError && <p className="mt-2 text-xs text-red-600">{flightError}</p>}
 
       {flights && flights.length > 0 && (
-        <div className="mt-3 space-y-1 rounded-lg bg-white/60 p-2">
-          <p className="text-xs font-medium text-foreground/70">Found {flights.length} options</p>
+        <div className="mt-3 space-y-2 rounded-lg bg-black/30 p-3 border border-black/20">
+          <p className="text-xs font-semibold text-foreground">✈ {flights.length} options found</p>
           {flights.slice(0, 3).map((flight, i) => (
-            <div key={i} className="text-xs text-foreground/70">
-              {flight.airline ? `${flight.airline} - ` : ""}
-              {flight.price ? `$${flight.price}` : "Price TBD"}
-              {flight.stops ? ` (${flight.stops} stop${flight.stops > 1 ? "s" : ""})` : ""}
+            <div key={i} className="text-xs text-foreground flex justify-between items-center">
+              <span>{flight.airline}</span>
+              <span className="font-semibold text-sage">${flight.price}</span>
+              {flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
             </div>
           ))}
         </div>
