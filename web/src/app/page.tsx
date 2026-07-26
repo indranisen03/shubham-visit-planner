@@ -80,7 +80,7 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
                   const url = `https://www.kayak.com/flights/AUS-DTW/${visit.startDate.replace(/-/g, "")}`;
                   window.open(url, "_blank");
                 }}
-                className="ml-auto rounded bg-blush/80 px-2 py-1 text-xs font-medium text-black hover:bg-blush transition"
+                className="ml-auto rounded bg-blush px-2 py-1 text-xs font-medium text-background hover:opacity-90 transition"
               >
                 Book
               </button>
