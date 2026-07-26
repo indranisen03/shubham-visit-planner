@@ -11,12 +11,76 @@ type OnboardingData = {
   anchorPlans: Record<string, { option: string; note: string }>;
 };
 
+type FlightOption = {
+  price?: number;
+  airline?: string;
+  stops?: number;
+};
+
 function formatDate(iso: string) {
   return new Date(`${iso}T00:00:00`).toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
+}
+
+function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchFlights: (visit: ProposedVisit) => void }) {
+  const [flightSearching, setFlightSearching] = useState(false);
+  const [flights, setFlights] = useState<FlightOption[] | null>(null);
+  const [flightError, setFlightError] = useState<string | null>(null);
+
+  const handleSearchFlights = async () => {
+    setFlightSearching(true);
+    setFlightError(null);
+    try {
+      const res = await fetch(
+        `/api/flights?departureDate=${visit.startDate}&returnDate=${visit.endDate}`
+      );
+      if (!res.ok) throw new Error("Flight search failed");
+      const data = await res.json();
+      setFlights(data.data || []);
+    } catch (e) {
+      setFlightError("Couldn't fetch flights");
+    } finally {
+      setFlightSearching(false);
+    }
+  };
+
+  return (
+    <div className="rounded-lg bg-blush/40 p-4">
+      <div className="flex items-baseline justify-between">
+        <h3 className="font-medium">
+          {formatDate(visit.startDate)} – {formatDate(visit.endDate)}
+        </h3>
+        <span className="text-xs font-medium text-foreground/70">~{visit.workingDays}d</span>
+      </div>
+      <p className="mt-1 text-sm text-foreground/70">{visit.note}</p>
+
+      <button
+        onClick={handleSearchFlights}
+        disabled={flightSearching}
+        className="mt-3 rounded-lg bg-sage/60 px-3 py-1.5 text-xs font-medium text-foreground hover:opacity-90 disabled:opacity-50"
+      >
+        {flightSearching ? "Searching..." : "Search Flights"}
+      </button>
+
+      {flightError && <p className="mt-2 text-xs text-red-600">{flightError}</p>}
+
+      {flights && flights.length > 0 && (
+        <div className="mt-3 space-y-1 rounded-lg bg-white/60 p-2">
+          <p className="text-xs font-medium text-foreground/70">Found {flights.length} options</p>
+          {flights.slice(0, 3).map((flight, i) => (
+            <div key={i} className="text-xs text-foreground/70">
+              {flight.airline ? `${flight.airline} - ` : ""}
+              {flight.price ? `$${flight.price}` : "Price TBD"}
+              {flight.stops ? ` (${flight.stops} stop${flight.stops > 1 ? "s" : ""})` : ""}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function HomePage() {
@@ -93,15 +157,7 @@ export default function HomePage() {
               <p className="text-sm text-foreground/70">No visits possible with 0 days remaining.</p>
             ) : (
               skeleton.map((visit) => (
-                <div key={visit.id} className="rounded-lg bg-blush/40 p-4">
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="font-medium">
-                      {formatDate(visit.startDate)} – {formatDate(visit.endDate)}
-                    </h3>
-                    <span className="text-xs font-medium text-foreground/70">~{visit.workingDays}d</span>
-                  </div>
-                  <p className="mt-1 text-sm text-foreground/70">{visit.note}</p>
-                </div>
+                <VisitCard key={visit.id} visit={visit} onSearchFlights={() => {}} />
               ))
             )}
           </div>
