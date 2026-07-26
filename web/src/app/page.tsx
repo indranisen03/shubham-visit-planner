@@ -77,14 +77,8 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
               {flight.stops && flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
               <button
                 onClick={() => {
-                  // Format dates as MM/DD/YYYY for Delta
-                  const [year, month, day] = visit.startDate.split("-");
-                  const [retYear, retMonth, retDay] = visit.endDate.split("-");
-                  const departDate = `${month}/${day}/${year}`;
-                  const returnDate = `${retMonth}/${retDay}/${retYear}`;
-
-                  // Delta URL with proper parameter names and date format
-                  const url = `https://www.delta.com/?from=AUS&to=DTW&departDate=${departDate}&returnDate=${returnDate}`;
+                  // Kayak URL format: flights/FROM-TO/DEPARTURE/RETURN
+                  const url = `https://www.kayak.com/flights/AUS-DTW/${visit.startDate}/${visit.endDate}`;
                   window.open(url, "_blank");
                 }}
                 className="ml-auto rounded bg-blush px-2 py-1 text-xs font-medium text-background hover:opacity-90 transition"
