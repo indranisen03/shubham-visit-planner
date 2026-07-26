@@ -77,8 +77,10 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
               {flight.stops && flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
               <button
                 onClick={() => {
-                  // Google Flights URL with departure and return dates
-                  const url = `https://www.google.com/flights?hl=en#flt=AUS.DTW.${visit.startDate}/DTW.AUS.${visit.endDate}`;
+                  // Delta official website with pre-filled dates
+                  const departDate = visit.startDate.replace(/-/g, ""); // 20260731
+                  const returnDate = visit.endDate.replace(/-/g, ""); // 20260817
+                  const url = `https://www.delta.com/flight-search/find-flights?origin=AUS&destination=DTW&departDate=${departDate}&returnDate=${returnDate}&tripType=round&adults=1`;
                   window.open(url, "_blank");
                 }}
                 className="ml-auto rounded bg-blush px-2 py-1 text-xs font-medium text-background hover:opacity-90 transition"
