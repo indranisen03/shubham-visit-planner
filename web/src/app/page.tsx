@@ -60,7 +60,7 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
       <button
         onClick={handleSearchFlights}
         disabled={flightSearching}
-        className="mt-3 rounded-lg bg-sage/60 px-3 py-1.5 text-xs font-medium text-foreground hover:opacity-90 disabled:opacity-50"
+        className="mt-3 rounded-lg bg-blush/60 px-3 py-1.5 text-xs font-medium text-foreground hover:opacity-90 disabled:opacity-50"
       >
         {flightSearching ? "Searching..." : "Search Flights"}
       </button>
@@ -73,7 +73,7 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
           {flights.slice(0, 3).map((flight, i) => (
             <div key={i} className="text-xs text-foreground flex justify-between items-center">
               <span>{flight.airline}</span>
-              <span className="font-semibold text-sage">${flight.price}</span>
+              <span className="font-semibold text-blush">${flight.price}</span>
               {flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
             </div>
           ))}
@@ -142,7 +142,7 @@ export default function HomePage() {
         </section>
 
         {/* 6-month skeleton */}
-        <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-sage/60">
+        <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-blush/60">
           <h2 className="text-lg font-medium">Proposed 6-month skeleton</h2>
           <p className="mt-1 text-sm text-foreground/70">
             Rough visit windows (blue shades). Confirm dates + search flights in the{" "}

@@ -149,14 +149,14 @@ export default function OnboardingPage() {
           </section>
 
           {/* Fixed holidays */}
-          <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-sage/60">
+          <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-blush/60">
             <h2 className="text-lg font-medium">Fixed holidays</h2>
             <p className="mt-1 text-sm text-foreground/70">
               Automatic — no choice needed, just here for planning context.
             </p>
             <ul className="mt-4 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
               {FIXED_HOLIDAYS_2026.map((h) => (
-                <li key={h.id} className="rounded-lg bg-sage/40 px-3 py-2">
+                <li key={h.id} className="rounded-lg bg-blush/40 px-3 py-2">
                   <div className="font-medium">{formatDate(h.date)}</div>
                   <div className="text-foreground/70">{h.label}</div>
                 </li>
@@ -206,7 +206,7 @@ export default function OnboardingPage() {
           </section>
 
           {/* Cultural anchors not on the employer calendar */}
-          <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-sage/60">
+          <section className="rounded-2xl bg-cream p-6 shadow-sm ring-1 ring-blush/60">
             <h2 className="text-lg font-medium">Durga Puja &amp; Diwali</h2>
             <p className="mt-1 text-sm text-foreground/70">
               Not on the employer calendar at all — skipping means no time off
@@ -214,7 +214,7 @@ export default function OnboardingPage() {
             </p>
             <div className="mt-4 space-y-4">
               {CULTURAL_ANCHORS_2026.map((a) => (
-                <div key={a.id} className="rounded-lg bg-sage/30 p-4">
+                <div key={a.id} className="rounded-lg bg-blush/30 p-4">
                   <div className="font-medium">
                     {a.name}{" "}
                     <span className="font-normal text-foreground/70">
@@ -227,7 +227,7 @@ export default function OnboardingPage() {
                       onChange={(e) =>
                         setAnchorPlan(a.id, { option: e.target.value as AnchorPlan["option"] })
                       }
-                      className="rounded-lg border border-sage-dark/50 bg-white px-3 py-2 text-sm"
+                      className="rounded-lg border border-blush-dark/50 bg-white px-3 py-2 text-sm"
                     >
                       {ANCHOR_OPTIONS.map((opt) => (
                         <option key={opt} value={opt}>
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
                       placeholder="optional note"
                       value={anchorPlans[a.id]?.note ?? ""}
                       onChange={(e) => setAnchorPlan(a.id, { note: e.target.value })}
-                      className="flex-1 rounded-lg border border-sage-dark/50 bg-white px-3 py-2 text-sm"
+                      className="flex-1 rounded-lg border border-blush-dark/50 bg-white px-3 py-2 text-sm"
                     />
                   </div>
                 </div>
@@ -260,7 +260,7 @@ export default function OnboardingPage() {
         </form>
 
         {submitted && (
-          <div className="rounded-2xl bg-sage/50 p-6 text-sm">
+          <div className="rounded-2xl bg-blush/50 p-6 text-sm">
             <p className="font-medium">Saved to the shared database.</p>
             <p className="mt-1 text-foreground/70">
               {visual.remaining} days remaining · {floatingPicks.length}/
