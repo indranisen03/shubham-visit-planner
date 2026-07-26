@@ -74,7 +74,7 @@ function VisitCard({ visit, onSearchFlights }: { visit: ProposedVisit; onSearchF
             <div key={i} className="text-xs text-foreground flex justify-between items-center gap-2">
               <span>{flight.airline}</span>
               <span className="font-semibold text-blush">${flight.price}</span>
-              {flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
+              {flight.stops && flight.stops > 0 && <span className="text-foreground/60">+{flight.stops} stop{flight.stops > 1 ? "s" : ""}</span>}
               <button
                 onClick={() => {
                   const url = `https://www.kayak.com/flights/AUS-DTW/${visit.startDate.replace(/-/g, "")}`;
