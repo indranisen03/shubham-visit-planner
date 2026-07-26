@@ -146,7 +146,7 @@ export default function HomePage() {
           <h2 className="text-lg font-medium">Proposed 6-month skeleton</h2>
           <p className="mt-1 text-sm text-foreground/70">
             Rough visit windows (blue shades). Confirm dates + search flights in the{" "}
-            <Link href="/onboarding" className="font-medium text-blush-dark hover:underline">
+            <Link href="/onboarding" className="font-medium text-blush hover:text-blush-dark transition">
               onboarding form
             </Link>
             .
